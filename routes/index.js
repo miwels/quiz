@@ -6,6 +6,10 @@ var quizController = require('../controllers/quiz_controller.js');
 router.get('/', function(req, res, next) {
   res.render('index', { title: 'Quiz' });
 });
+/* pagina de creditos */
+router.get('/author', function(req, res, next) {
+  res.render('author', { fecha: new Date().getFullYear() });
+});
 
 router.get('/quizes/question', quizController.question);
 router.get('/quizes/answer', quizController.answer);
