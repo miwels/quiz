@@ -11,7 +11,12 @@ router.get('/author', function(req, res, next) {
   res.render('author', { fecha: new Date().getFullYear() });
 });
 
-router.get('/quizes/question', quizController.question);
-router.get('/quizes/answer', quizController.answer);
+// definimos 3 rutas extra.
+// la primera devuelve la lista de todas las preguntas
+// la segunda permite acceder a una pregunta por id (la expresion regular permite solo numberos en el id (\\d+))
+// la tercera permite comprobar la respuesta en funcion del id de pregunta
+router.get('/quizes', quizController.index);
+router.get('/quizes/:quizId(\\d+)', quizController.show);
+router.get('/quizes/:quizId(\\d+)/answer', quizController.answer)
 
 module.exports = router;

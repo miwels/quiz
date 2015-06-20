@@ -33,13 +33,7 @@ var sequelize = new Sequelize(DB_name, user, pwd, {
 	storage : storage, 	// solo SQLite (.env)
 	omitNull: true 		// definido solo para Heroku PostgreSQL
 });
-/*
-var sequelize = new Sequelize(null, null, null,
-					{
-						dialect: "sqlite",
-						storage: "quiz.sqlite"
-					});
-*/
+
 
 // Importar la definicion de la tabla Quiz en quiz.js
 var Quiz = sequelize.import(path.join(__dirname, 'quiz'));
@@ -56,7 +50,10 @@ sequelize.sync().success(function(){
 			Quiz.create({
 				pregunta: 'Capital de Italia',
 				respuesta: 'Roma'
-			}).success(function(){
+			}).create({
+				pregunta: 'Capital de Portugal',
+				respuesta: 'Lisboa'
+			}).then(function(){
 				console.log('Base de datos inicializada');
 			});
 		}
