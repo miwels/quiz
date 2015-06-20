@@ -11,6 +11,9 @@ router.get('/author', function(req, res, next) {
   res.render('author', { fecha: new Date().getFullYear() });
 });
 
+// si el router encuentra el parametro :quizId en la URL, ejecuta el autoloader
+router.param('quizId', quizController.load);
+
 // definimos 3 rutas extra.
 // la primera devuelve la lista de todas las preguntas
 // la segunda permite acceder a una pregunta por id (la expresion regular permite solo numberos en el id (\\d+))

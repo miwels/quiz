@@ -1,70 +1,49 @@
 var models = require('../models/models.js');
 
+// definimos un middleware 'load'. Este middleware se instala en el router
+// mediante router.param() y cada vez que el router encuentre dicho
+// parametro en la URL, ejecutara este middleware. De este modo podemos
+// factorizar el codigo y meter todos los accesos a la BDD en una misma funcion
+
+// El modo en que function es, obtenemos el id que se nos pasa por get mediante req.params.quizId
+// debido al cambio en la API, hemos de usar promesas, por eso usamos .then()
+// para ejecutar una funcion cuando la busqueda en la base de datos ha concluido
+// el resultado del query se guarda en el parametro 'quiz' del callback
+exports.load = function(req, res, next, quizId){
+	models.Quiz.find(quizId).then(function(quiz){
+		// si encontramos un valor que coincida con ese id, lo metemos en la
+		// respuesta mediante req.quiz y pasamos el control al siguiente
+		// middleware
+		if(quiz){
+			req.quiz = quiz;
+			next();
+		}
+		else{
+			next(new Error('No existe quizId=' + quizId));
+		}
+	}).catch(function(error){ // si hay algun error, pasamos el control al siguiente middleware de error
+		next(error);
+	});
+}
+
 // para el index, hacemos un findAll y devolvemos todas las preguntas
 // que hay en la base de datos
 exports.index = function(req, res){
 	models.Quiz.findAll().then(function(quizes){
 		res.render('quizes/index', {quizes: quizes});
+	}).catch(function(error){
+		next(error);
 	});
 };
 
-// muestra la pregunta
-// obtenemos el id que se nos pasa por get mediante req.params.quizId
-// debido al cambio en la API, hemos de usar promesas, por eso usamos .then()
-// para ejecutar una funcion cuando la busqueda en la base de datos ha concluido
-// el resultado del query se guarda en el parametro 'quiz' del callback
 exports.show = function(req, res){
-	models.Quiz.find(req.params.quizId).then(function(quiz){
-		res.render('quizes/show', {quiz: quiz});
-	});
+	res.render('quizes/show', {quiz: req.quiz});
 };
 
-// del mismo modo capturamos la respuesta y la comparamos con el elemento de la base
-// de datos cuyo id coincide con el de la pregunta
 exports.answer = function(req, res){
-	models.Quiz.find(req.params.quizId).then(function(quiz){
-		if(req.query.respuesta === quiz.respuesta){
-			res.render('quizes/answer', {
-				quiz 	 : quiz,
-				respuesta: "Correcto"
-			});
-		}
-		else{
-			res.render('quizes/answer', {
-				quiz 	  : quiz,
-				respuesta : "Incorrecto"
-			})
-		}
-	});
-}
-
-/*
-exports.question = function(req, res){
-	// res.render('quizes/question', {pregunta: 'Capital de Italia'});
-
-	// findAll devuelve un array con el contenido de la BDD que se almacena en el parametro quiz del callback
-	models.Quiz.findAll().success(function(quiz){
-		res.render('quizes/question', {
-			pregunta: quiz[0].pregunta
-		});
-	});
-}
-
-exports.answer = function(req, res){
-	/*if(req.query.respuesta === 'Roma'){
-		res.render('quizes/answer', {respuesta: 'Correcto'});
+	var resultado = 'Incorrecto';
+	if(req.query.respuesta === req.quiz.respuesta){
+		resultado = 'Correcto';
 	}
-	else{
-		res.render('quizes/answer', {respuesta: 'Incorrecto'});
-	}*/
-	/*
-	models.Quiz.findAll().success(function(quiz){
-		if(req.query.respuesta === quiz[0].respuesta){
-			res.render('quizes/answer', {respuesta: 'Correcto'});
-		}
-		else{
-			res.render('quizes/answer', {respuesta: 'Incorrecto'});
-		}
-	});
+	res.render('quizes/answer', {quiz: req.quiz, respuesta: resultado});
 }
-*/
