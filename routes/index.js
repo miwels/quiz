@@ -20,6 +20,6 @@ router.param('quizId', quizController.load);
 // la tercera permite comprobar la respuesta en funcion del id de pregunta
 router.get('/quizes', quizController.index);
 router.get('/quizes/:quizId(\\d+)', quizController.show);
-router.get('/quizes/:quizId(\\d+)/answer', quizController.answer)
+router.get('/quizes/:quizId(\\d+)/answer', quizController.answer);
 
 module.exports = router;

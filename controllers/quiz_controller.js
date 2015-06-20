@@ -29,7 +29,24 @@ exports.load = function(req, res, next, quizId){
 // para el index, hacemos un findAll y devolvemos todas las preguntas
 // que hay en la base de datos
 exports.index = function(req, res){
-	models.Quiz.findAll().then(function(quizes){
+
+	// definimos un objeto vacio en caso de que el usuario no haga
+	// una busqueda y queramos mostrar todos los resultados
+	var query = {};
+
+	// si el usuario realiza una busqueda, componemos el query
+	if(req.query.search)
+	{
+		var search = req.query.search;
+		search = search.split(" ").join('%');
+		search = '%' + search + '%';
+
+		query = {
+			where: ["pregunta like ?", search]
+		};
+	}
+
+	models.Quiz.findAll(query).then(function(quizes){
 		res.render('quizes/index', {quizes: quizes});
 	}).catch(function(error){
 		next(error);
