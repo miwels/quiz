@@ -41,8 +41,13 @@ exports.index = function(req, res){
 		search = search.split(" ").join('%');
 		search = '%' + search + '%';
 
+		var like = "ilike";
+		if(models.Quiz.daoFactoryManager.sequelize.options.dialect === "sqlite"){
+			like = "like";
+		}
+
 		query = {
-			where: ["pregunta like ?", search]
+			where: ["pregunta " + like + " ?", search]
 		};
 	}
 
