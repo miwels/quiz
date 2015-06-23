@@ -28,7 +28,7 @@ exports.load = function(req, res, next, quizId){
 
 // para el index, hacemos un findAll y devolvemos todas las preguntas
 // que hay en la base de datos
-exports.index = function(req, res){
+exports.index = function(req, res, next){
 
 	// definimos un objeto vacio en caso de que el usuario no haga
 	// una busqueda y queramos mostrar todos los resultados
@@ -41,13 +41,9 @@ exports.index = function(req, res){
 		search = search.split(" ").join('%');
 		search = '%' + search + '%';
 
-		var like = "ilike";
-		if(models.Quiz.daoFactoryManager.sequelize.options.dialect === "sqlite"){
-			like = "like";
-		}
-
 		query = {
-			where: ["pregunta " + like + " ?", search]
+			where : ["lower(pregunta) like lower(?)", search],
+			order : "pregunta ASC"
 		};
 	}
 
