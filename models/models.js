@@ -42,7 +42,7 @@ var Quiz = sequelize.import(path.join(__dirname, 'quiz'));
 exports.Quiz = Quiz;
 
 // sincroniza la BD con el modelo definido
-sequelize.sync().success(function(){
+sequelize.sync().then(function(){
 	// count() devuelve el numero de filas de la tabla. Si es 0 inicializamos la tabla con una entrada
 	Quiz.count().success(function(count){
 		if(count === 0){
