@@ -9,8 +9,17 @@ var models = require('../models/models.js');
 // debido al cambio en la API, hemos de usar promesas, por eso usamos .then()
 // para ejecutar una funcion cuando la busqueda en la base de datos ha concluido
 // el resultado del query se guarda en el parametro 'quiz' del callback
+
+// Hemos de modificar esta function de autoload para que incluya tambien comentarios
+// asociados a cada quiz es decir, hemos de reemplazar find(quizId) con el find(...) que
+// tenemos a continuacion donde definimos el id que se debe buscar y ademas, que ha de incluir
+// todos los comentarios asociados a ese modelo. Esto hara que en cada quiz object habra una
+// propiedad Comment con todos los comentarios asociados a esa pregunta
 exports.load = function(req, res, next, quizId){
-	models.Quiz.find(quizId).then(function(quiz){
+	models.Quiz.find({
+		where:   { id: Number(quizId)},
+		include: [{ model: models.Comment }]
+	}).then(function(quiz){
 		// si encontramos un valor que coincida con ese id, lo metemos en la
 		// respuesta mediante req.quiz y pasamos el control al siguiente
 		// middleware
