@@ -26,6 +26,7 @@ exports.create = function(req, res)
 				if(err)
 				{
 					res.render('comments/new.ejs', {
+						quizid: req.params.quizId,
 						comment: comment,
 						errors: err.errors
 					});

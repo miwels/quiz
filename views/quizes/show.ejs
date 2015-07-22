@@ -3,6 +3,7 @@
 	<p>Pregunta: <%= quiz.pregunta %></p>
 	<p><input type="text" name="respuesta" value="Respuesta"></p>
 	<p><input type="submit" value="Enviar"></p>
+</form>
 
 	<p>
 		<a href="/quizes/<%= quiz.id %>/comments/new">
@@ -14,5 +15,3 @@
 	<% for(index in quiz.Comments){ %>
 		<p>- <%= quiz.Comments[index].texto %></p>
 	<% } %>
-
-</form>
