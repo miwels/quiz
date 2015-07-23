@@ -35,6 +35,12 @@ exports.create = function(req, res)
 		};
 
 		// en app.js hemos guardado la pagina desde la que se ha hecho login. Si el usuario se autentica correctamente lo mandamos a esa pagina
+		// NOTA: es posible que si alguien carga el formulario de login directamente, este valor sea undefined por lo que la conversion a string
+		// fallara y nos dara un error. Si este es el caso mandamos al usuario a la pagina inicial
+		if(req.session.redir === undefined)
+		{
+			req.session.redir = "/";
+		}
 		res.redirect(req.session.redir.toString());
 	});
 }
@@ -43,5 +49,9 @@ exports.create = function(req, res)
 exports.destroy = function(req, res)
 {
 	delete req.session.user;
+	if(req.session.redir === undefined)
+	{
+		req.session.redir = "/";
+	}
 	res.redirect(req.session.redir.toString());
 }
