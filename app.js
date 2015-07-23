@@ -6,6 +6,7 @@ var cookieParser = require('cookie-parser');
 var bodyParser = require('body-parser');
 var partials = require('express-partials');
 var methodOverride = require('method-override');
+var session = require('express-session');
 
 var routes = require('./routes/index');
 
@@ -23,9 +24,21 @@ app.use(favicon(__dirname + '/public/favicon.ico'));
 app.use(logger('dev'));
 app.use(bodyParser.json());
 app.use(bodyParser.urlencoded());
-app.use(cookieParser());
+app.use(cookieParser('Quiz 2015')); // anadimos una semilla para cifrar la cookie y el cifrado sea mas aleatorio
+app.use(session()); // instala middleware session
 app.use(methodOverride('_method')); // permite convertir POST a PUT usando un parametro _method en el body del request
 app.use(express.static(path.join(__dirname, 'public')));
+
+// a la hora de gestionar sesiones, debemos guardar la pagina de referencia para saber donde hemos de redirigir al usuario
+app.use(function(req, res, next){
+    // si la pagina no es /login o /logout, guardamos la ruta en la variable de sesion 'redir'
+    if(!req.path.match(/\/login|\/logout/)){
+        req.session.redir = req.path;
+    }
+    // y pasamos esta variable a nuestras vistas, de este modo no hemos de pasar la sesion como un parametro de una funcion
+    res.locals.session = req.session;
+    next();
+});
 
 app.use('/', routes);
 

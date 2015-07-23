@@ -3,6 +3,7 @@ var router = express.Router();
 
 var quizController = require('../controllers/quiz_controller.js');
 var commentController = require('../controllers/comment_controller.js');
+var sessionController = require('../controllers/session_controller.js');
 
 /* GET home page. */
 router.get('/', function(req, res, next) {
@@ -15,6 +16,11 @@ router.get('/author', function(req, res, next) {
 
 // si el router encuentra el parametro :quizId en la URL, ejecuta el autoloader
 router.param('quizId', quizController.load);
+
+// definimos las rutas para las sesiones
+router.get('/login',  sessionController.new);		// formulario de login
+router.post('/login', sessionController.create);	// crear sesion
+router.get('/logout', sessionController.destroy); 	//destruir sesion, se deberia usar un DELETE ya que estamos destruyendo un recurso
 
 // definimos 3 rutas extra.
 // la primera devuelve la lista de todas las preguntas
