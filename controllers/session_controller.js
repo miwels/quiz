@@ -1,4 +1,16 @@
-
+// verifica si el usuario esta logeado, si lo esta pasa el control al siguiente middleware
+// si no, impide que se ejecute el siguiente middleware
+exports.loginRequired = function(req, res, next)
+{
+	if(req.session.user)
+	{
+		next();
+	}
+	else
+	{
+		res.redirect("/login");
+	}
+}
 // GET /login 	-- formulario de login
 exports.new = function(req, res)
 {
