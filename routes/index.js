@@ -16,6 +16,8 @@ router.get('/author', function(req, res, next) {
 
 // si el router encuentra el parametro :quizId en la URL, ejecuta el autoloader
 router.param('quizId', quizController.load);
+// lo mismo para comment, ejecuta autoloader para tener el comentario cargado si encuentra el parametro :commentId
+router.param('commentId', commentController.load);
 
 // definimos las rutas para las sesiones
 router.get('/login',  sessionController.new);		// formulario de login
@@ -39,6 +41,10 @@ router.delete('/quizes/:quizId(\\d+)', 		sessionController.loginRequired, quizCo
 
 // rutas para comentarios:
 router.get('/quizes/:quizId(\\d+)/comments/new', 	commentController.new);
-router.post('/quizes/:quizId(\\d+)/comments', 		commentController.create)
+router.post('/quizes/:quizId(\\d+)/comments', 		commentController.create);
+// mediante esta ruta podemos publicar comentarios. El parametro :commentId hace referencia a la linea 19 donde definimos el parametro en el router
+// para cumplir las reglas de REST esto deberia ser un put
+// El primer id :quizId indica a que pregunta hace referencia, :commentId hace referencia al comentario
+router.get('/quizes/:quizId(\\d+)/comments/:commentId(\\d+)/publish', sessionController.loginRequired, commentController.publish);
 
 module.exports = router;
