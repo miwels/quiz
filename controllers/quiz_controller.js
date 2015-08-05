@@ -31,7 +31,6 @@ exports.load = function(req, res, next, quizId){
 			next(new Error('No existe quizId=' + quizId));
 		}
 	}).catch(function(error){ // si hay algun error, pasamos el control al siguiente middleware de error
-		console.log("***************");
 		next(error);
 	});
 }
