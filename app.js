@@ -37,6 +37,19 @@ app.use(function(req, res, next){
     }
     // y pasamos esta variable a nuestras vistas, de este modo no hemos de pasar la sesion como un parametro de una funcion
     res.locals.session = req.session;
+
+    // comprobar si han pasado mas de 2 minutos desde la ultima peticion HTTP
+    var now = parseInt(new Date().getTime()/1000);
+    var twoMinutes = now - req.session.timestamp;
+
+    req.session.timestamp = parseInt(new Date().getTime()/1000); // actualiza el nuevo timestamp
+
+    // si han pasado mas de 2 minutos desde la ultima peticion y el usuario esta logeado, destruir la sesion
+    if(req.session.user && twoMinutes > 10)
+    {
+      delete req.session.user;
+    }
+
     next();
 });
 
