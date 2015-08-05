@@ -45,7 +45,7 @@ app.use(function(req, res, next){
     req.session.timestamp = parseInt(new Date().getTime()/1000); // actualiza el nuevo timestamp
 
     // si han pasado mas de 2 minutos desde la ultima peticion y el usuario esta logeado, destruir la sesion
-    if(req.session.user && twoMinutes > 10)
+    if(req.session.user && twoMinutes > 120)
     {
       delete req.session.user;
     }
