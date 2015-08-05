@@ -8,7 +8,7 @@ var app = require('../app');
 var debug = require('debug')('quiz:server');
 var fs = require("fs");
 var https = require("https");
-// var http = require('http');
+var http = require('http');
 
 /**
  * Get port from environment and store in Express.
@@ -30,6 +30,11 @@ var server = http.createServer(app);
 server.listen(port);
 server.on('error', onError);
 server.on('listening', onListening);
+
+var options = {
+  key: fs.readFileSync('certs/quiz-2015-key.pem').toString(),
+  cert: fs.readFileSync('certs/quiz-2015-cert.pem').toString()
+};
 
 var serverSecure = https.createServer(options, app);
 serverSecure.listen(8443, function(){
