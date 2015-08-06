@@ -4,6 +4,7 @@ var router = express.Router();
 var quizController = require('../controllers/quiz_controller.js');
 var commentController = require('../controllers/comment_controller.js');
 var sessionController = require('../controllers/session_controller.js');
+var statisticsController = require('../controllers/statistics_controller.js');
 
 /* GET home page. */
 router.get('/', function(req, res, next) {
@@ -46,5 +47,8 @@ router.post('/quizes/:quizId(\\d+)/comments', 		commentController.create);
 // para cumplir las reglas de REST esto deberia ser un put
 // El primer id :quizId indica a que pregunta hace referencia, :commentId hace referencia al comentario
 router.get('/quizes/:quizId(\\d+)/comments/:commentId(\\d+)/publish', sessionController.loginRequired, commentController.publish);
+
+// agregamos una nueva ruta para consultar estadisticas:
+router.get('/quizes/statistics', statisticsController.get);
 
 module.exports = router;
